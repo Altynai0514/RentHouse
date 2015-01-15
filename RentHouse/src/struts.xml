@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+
+<struts>
+	<!-- 常量定义 -->
+	<constant name="struts.devMode" value="true" />
+	<constant name="struts.ui.theme" value="simple"/>
+    <constant name="struts.i18n.encoding" value="utf-8"></constant>
+    <constant name="struts.custom.i18n.resources" value="message"></constant>
+    
+    <!-- global package -->
+    <package name="house-global" namespace="/" extends="struts-default">
+    	<!-- 默认action -->
+	    <default-action-ref name="default" />
+		
+		<!-- 全局结果 -->
+		<global-results>
+			<result name="house.success">/pages/success.jsp</result>
+			<result name="house.fail">/pages/fail.jsp</result>
+			<result name="house.manage" type="redirect">doSearch.action</result>
+		</global-results>
+	    
+	    <action name="default" >
+	       	<result type="redirect">doSearch.action</result>
+	    </action>
+    </package>
+    
+    <!-- json package -->
+    <package name="house-json" namespace="/" extends="json-default">
+    	<action name="login" class="com.pb.web.action.UserAction" method="login">
+    		<result type="json"></result>
+    		<result type="json" name="login"></result>
+    	</action>
+    	
+    	<action name="validateName" class="com.pb.web.action.UserAction" method="validateName">
+    		<result type="json">
+    			<param name="root">msg</param>
+    		</result>
+    		<result type="json" name="input">
+    			<param name="root">msg</param>
+    		</result>
+    	</action>
+    	
+    	<action name="judgeUser" class="com.pb.web.action.UserAction" method="judgeUser">
+    		<result type="json">/pages/house_list.jsp</result>
+    	</action>
+    	<action name="findUsers" class="com.pb.web.action.UserAction" method="findAll"></action>
+    </package>
+    
+    <!-- 房屋管理 package -->
+    <package name="house-manage" namespace="/" extends="house-global">
+    	<action name="logout" class="com.pb.web.action.UserAction"  method="logout">
+    	</action>
+    	<action name="register" class="com.pb.web.action.UserAction"  method="register">
+    		<interceptor-ref name="defaultStack" ></interceptor-ref>
+			<interceptor-ref name="token"></interceptor-ref>
+			<result name="invalid.token">/pages/fail.jsp</result>
+    		
+    		<result>/pages/success.jsp</result>
+    		<result name="input">/pages/register.jsp</result>
+    	</action>
+    	
+    	<action name="doSearch" class="com.pb.web.action.HouseAction"  method="doSearch">
+    		<result>/pages/manage.jsp</result>
+    	</action>
+    	<action name="gotoAddHouse" class="com.pb.web.action.HouseAction"  method="gotoAddHouse">
+    		<result>/pages/add_house.jsp</result>
+    	</action>
+    	<action name="doAddHouse" class="com.pb.web.action.HouseAction"  method="doAddHouse">
+    		<result name="input">/pages/add_house.jsp</result>
+    	</action>
+    	
+    	<action name="doDeleteHouse" class="com.pb.web.action.HouseAction"  method="doDeleteHouse">
+    	</action>
+    	<action name="doUpdateHouse" class="com.pb.web.action.HouseAction"  method="doUpdateHouse">
+    		<result>/pages/update_house.jsp</result>
+    	</action>
+    	<action name="updateHouse" class="com.pb.web.action.HouseAction"  method="updateHouse">
+    		<result>/pages/success.jsp</result>
+    		<result name="input">/pages/add_house.jsp</result>
+    	</action>
+    	<action name="house" class="com.pb.web.action.HouseAction" method="show">
+    		<result>/pages/show_house.jsp</result>
+    	</action>
+    	<action name="getUserHouse" class="com.pb.web.action.HouseAction" method="getUserHouse">
+    		<result>/pages/update_house.jsp</result>
+    	</action>
+    	<action name="findAllHouse" class="com.pb.web.action.HouseAction" method="findAllHouse"></action>
+    </package>
+</struts>
